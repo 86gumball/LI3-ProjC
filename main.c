@@ -28,12 +28,12 @@ int main(void){
 	char holdChar;
 	int sizeOfWords;
 
-	for (sizeOfWords = 0, holdChar = fgetc(filePointer); holdChar != 13; holdChar = fgetc(filePointer), sizeOfWords++);
+	for (sizeOfWords = 0, holdChar = fgetc(filePointer); holdChar != '\r' && holdChar != '\n'; holdChar = fgetc(filePointer), sizeOfWords++);
 	
 	lines ++;
 
 	for (holdChar = fgetc(filePointer); holdChar != EOF; holdChar = fgetc(filePointer))
-		if (holdChar == 13)
+		if (holdChar == '\r' || holdChar == '\n')
 			lines++;
 
 	printf("Words Size:%d\nNumber Of Lines:%d\n",sizeOfWords,lines);
@@ -46,7 +46,7 @@ int main(void){
 
 	for (holdChar = fgetc(filePointer); holdChar != EOF; holdChar = fgetc(filePointer))
 	{
-		if (holdChar != 10 && holdChar != 13)
+		if (holdChar != '\n' && holdChar != '\r')
 		{
 			clientes[caracter] = holdChar;
 			caracter++;
@@ -69,7 +69,7 @@ int main(void){
 
 	for (int i = 0; i < sizeOfWords; i++)
 		putchar(clientes[(escolha-1)*sizeOfWords+i]);
-	putchar(10);
+	putchar('\n');
 
 	fclose(filePointer);
 
