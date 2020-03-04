@@ -1,9 +1,16 @@
 CC = gcc
 CFlags = -Wall -g
 
-main: main.o
+TestVendas: TestVendas.o AuxVendas.o TestProdutos.o TestClientes.o 
+	cc -o TestVendas TestVendas.o AuxVendas.o TestProdutos.o TestClientes.o
 
-main.o: main.c
+TestVendas.o: TestVendas.c TestProdutos.h TestClientes.h AuxVendas.h
+
+AuxVendas.o: AuxVendas.c AuxVendas.h
+
+TestProdutos.o: TestProdutos.c TestProdutos.h
+
+TestClientes.o: TestClientes.c TestClientes.h
 
 clean:
-	rm -f main *.o
+	rm -f TestVendas *.o
