@@ -3,11 +3,37 @@
 #include <string.h>
 #include "../include/AuxVendas.h"
 
-void copialimitada(char a[], char b[] , int n) {
-	int i;
-	for (i = 0; i < n; i++)
-		a[i] = b[i];
-	a[i] = 0;
+#define HashTableVenda Venda*
+
+// TODO: Implement this
+int hashCodeVenda(void){
+    //int key = stoi(code_cliente + 1);
+    //key = key % 4001;
+    return 0;
+}
+
+// TODO: Implement this
+Venda createVenda(Venda next,
+                  char code_produto[],
+                  char compra,
+                  char code_cliente[],
+                  unsigned int codigoPUM,
+                  char filial){
+    return NULL;
+}
+
+Venda cloneVenda(Venda outra){
+    if (outra == NULL) {
+        return NULL;
+    }
+    Venda new = malloc(sizeof(Venda));
+    strcpy(new->code_produto, outra->code_produto);
+    new->compra = outra->compra;
+    strcpy(new->code_cliente, outra->code_cliente);
+    new->codigoPUM = outra->codigoPUM;
+    new->filial = outra->filial;
+    new->prox = cloneVenda(outra->prox);
+    return new;
 }
 
 // Cria um codigo PUM a partir de um preço, unidades e mes
@@ -36,33 +62,32 @@ int devolve_mes (unsigned int codigoPUM) {
 	return mes;
 }
 
-void placeVenda (Venda p, Venda *mem[]) {
-	int local = 0;
-	int i;
+// TODO: Fix this
+// TODO: Make a seperate hashCode funtion that replaces the delimited code
+void placeVenda (Venda p, HashTableVenda tableVen) {
+    // Starting here
+	int hkey = 0;
 	int exp = 100;
-	for (i = 3; i < 6; i++) {
-		local += exp * (p.code_produto[i] - '0');
+	for (int i = 3; i < 6; i++) {
+		hkey += exp * (p->code_produto[i] - '0');
 		exp /= 10;
 	}
 	exp = 100000;
-	for (i = 1; i < 5; i++) {
-		local += exp * (p.code_cliente[i] - '0');
+	for (int i = 1; i < 5; i++) {
+		hkey += exp * (p->code_cliente[i] - '0');
 		exp /= 10;
 	}
-	createVenda(p,mem[local%4001000]);
-}
+    // Ending here
 
-void createVenda(Venda p, Venda *mem) {
-	Venda *it;
-	it = mem;
-	if (it != NULL)
-		it = &(*it->prox);
-	Venda *f = malloc(sizeof(Venda));
-	strcpy(p.code_cliente,(*f).code_cliente);
-	strcpy(p.code_produto,(*f).code_produto);
-	(*f).prox = NULL;
-	(*f).compra = p.compra;
-	(*f).filial = p.filial;
-	(*f).codigoPUM = p.codigoPUM;
-	*it = *f;
+    // hkey tem a posicao na hashtable
+
+    Venda new = cloneVenda(p);
+    Venda it = tableVen[hkey];
+    if (it == NULL) {
+        tableVen[hkey] = new;
+    } else {
+        while (it->prox != NULL)
+            it = it->prox;
+        it->prox = new;
+    }
 }
