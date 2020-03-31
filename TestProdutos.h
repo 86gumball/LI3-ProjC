@@ -3,9 +3,9 @@ typedef struct Produto {
 	struct Produto *prox;
 } *Produto;
 
-Produto createProduto (Produto *it, char key[], char pos[]);
+Produto createProduto (Produto *it, char key[]);
 
-void iterateP (int posTable, Produto mem[], char key[], char pos[]);
+void iterateP (int posTable, Produto mem[], char key[]);
 
 void allocateP (char key[], Produto mem[]);
 
