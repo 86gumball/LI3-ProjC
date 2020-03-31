@@ -5,18 +5,19 @@
 
 #define pathToClientes "../Dados Iniciais/Clientes.txt"
 
-Cliente createCliente (Cliente next, char key[]) {
-	//Alocação de memoria
-	Cliente new = (Cliente) malloc (sizeof (struct cliente)); 
-	//Passar para o inicio da lista ligada
-	new->prox = next; 
-	
-	// Iteração pela String
-	for (int i = 0; i < 5; i++) 
-		// Passagem de caracteres do codigo para o corpo
-		new->Codigo_Cliente[i] = key[i]; 
+// Requires: code_cliente é do tipo: Axxxx
+// Requires: 1000 <= xxxx <= 5000
+int hashCodeCliente(char code_cliente[]){
+    int key = stoi(code_cliente + 1);
+    key = key % 4001;
+    return key;
+}
 
-	// Retorna o novo corpo
+Cliente createCliente (Cliente next, char key[]) {
+	Cliente new = (Cliente) malloc (sizeof (struct cliente)); 
+	new->prox = next; 
+	for (int i = 0; i < 5; i++) 
+		new->Codigo_Cliente[i] = key[i]; 
 	return new; 
 }
 

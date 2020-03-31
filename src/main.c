@@ -6,24 +6,35 @@
 #include "../include/TestVendas.h"
 
 #define pathToVendas "../Dados Iniciais/Vendas_1M.txt"
+#define HashTableProduto Produto*
+#define HashTableCliente Cliente*
 
+// TODO: Rename TestProdutos -> produtosUtils
+// TODO: Rename TestClientes -> clientesUtils
 int main(void){
     FILE *f = fopen(pathToVendas, "r");
 
-    Produto *memP = testProds();
-    Cliente *memC = testClientes();
-    printf("senpai notice me\n");
+    // Cria uma hashtable e enche-a com todos os produtos
+    HashTableProduto memP = testProds();
+    // Cria uma hashtable e enche-a com todos os clientes
+    HashTableCliente memC = testClientes();
 
-    Cliente *it;
-
-    for (int i = 0; i < 4001; i++) {
+    // Start debugging only 
+    /*
+    Produto it;
+    for (int i = 0; i < 9000; i++) {
         printf("%d:",i);
-        for(it = &memC[i]; *it != NULL; it = &(*it)->prox)
-            printf("%s->",(*it)->Codigo_Cliente);
+        for(it = memP[i]; it != NULL; it = it->prox)
+            printf("%s->",it->Codigo_Produto);
         putchar(10);
     }
+    */
+    // End debugging only
 
-    Venda **memV = malloc(4001000 * sizeof(Venda));
+    // tam = nº clientes * nº produtos
+    // tam = 4001 * 1000
+    int tam = 4001000;
+    Venda **memV = malloc(tam * sizeof(Venda));
 
     Venda p;
 
@@ -34,21 +45,43 @@ int main(void){
     int unidades;
     int mes;
 
-    while (fscanf(f,"%s %f %d %c %s %d %c",p.produto, &preco, &unidades, &p.compra, p.cliente, &mes, &p.filial) != EOF) {
-        p.codigo_Extra = codigo_Tudo (preco, unidades, mes);
-        if (produto_Existe(memP,p.produto) && cliente_Existe(memC,p.cliente)) {
-            //placeVenda(p,memV);
+    // Preenche Vendas e as variaveis definidas a cima
+    while (fscanf(f,"%s %f %d %c %s %d %c", p.code_produto,
+                                            &preco,
+                                            &unidades,
+                                            &p.compra,
+                                            p.code_cliente,
+                                            &mes,
+                                            &p.filial) != EOF) {
+        // Converte preco, unidades e mes num codigoPUM
+        p.codigoPUM = createPUM(preco, unidades, mes);
+        if (produto_Existe(memP, p.code_produto) && cliente_Existe(memC, p.code_cliente)) {
+            placeVenda(p,memV);
             lines++;
         }
     }
+    
+    // Start debugging only 
+    /*
+    Produto it;
+    for (int i = 0; i < 9000; i++) {
+        printf("%d:",i);
+        for(it = memP[i]; it != NULL; it = it->prox)
+            printf("%s->",it->Codigo_Produto);
+        putchar(10);
+    }
+    */
+    // End debugging only
 
-    preco = devolve_Preco(p.codigo_Extra);
-    unidades = devolve_unidades(p.codigo_Extra);
-    mes = devolve_mes(p.codigo_Extra);
+
+
+    preco = devolve_Preco(p.codigoPUM);
+    unidades = devolve_unidades(p.codigoPUM);
+    mes = devolve_mes(p.codigoPUM);
 
 
     printf("%d das vendas são verdadeiras.\n", lines);
-    printf("Produto:%s\n", p.produto);
+    printf("Produto:%s\n", p.code_produto);
 
     printf("Preço:%f\n", preco);
     printf("Unidades:%d\n", unidades);
@@ -56,7 +89,7 @@ int main(void){
     if (p.compra == 'P')
         printf("Por Promoção\n");
     else printf("Compra Normal\n");
-    printf ("Cliente:%s\n",p.cliente);
+    printf ("Cliente:%s\n",p.code_cliente);
 
     printf ("Mes:%s\n", meses[mes - 1]);
 

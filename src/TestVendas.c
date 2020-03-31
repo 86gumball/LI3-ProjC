@@ -5,56 +5,52 @@
 #include "../include/TestProdutos.h"
 #include "../include/TestClientes.h"
 
-int cliente_Existe (Cliente *mem, char* verificar) {
-	char key = verificar[0];
+#define HashTableProduto Produto*
+#define HashTableCliente Cliente*
 
-	int local = 0;
-	int exp = 1000;
+// Confirmado que funciona
+int cliente_Existe (HashTableCliente table, char code_cliente[]) {
+    // produto key
+	char pkey = code_cliente[0];
+    // hkey = key na hashtable
+    int hkey = hashCodeCliente(code_cliente);
 
-	for (int i = 1; i < 5; i++) {
-		local += exp*(verificar[i] - '0');
-		exp /= 10;
-	}
-
-	if (mem[local%4001] == NULL)
+	if (table[hkey] == NULL)
 		return 0;
 
-	Cliente *it = &mem[local%4001];
+	Cliente it = table[hkey];
 
-	while ((*it) != NULL) {
-		if (key == (*it)->Codigo_Cliente[0])
+	while (it != NULL) {
+		if (pkey == it->Codigo_Cliente[0])
 			return 1;
-		it = &(*it)->prox;
+		it = it->prox;
 	}
 
 	return 0;
 
 }
 
-int produto_Existe (Produto *mem, char* verificar) {
-	char key[2];
-	char cmp[2];
+// Confirmado que funciona
+int produto_Existe (HashTableProduto table, char code_produto[]) {
+    int hkey = hashCodeProduto(code_produto);
+    char pkey1[3];
+    char pkey2[3];
+    pkey1[0] = code_produto[0];
+    pkey1[1] = code_produto[1];
+    pkey1[2] = '\0';
+    pkey2[2] = '\0';
 
-	copialimitada(key,verificar,2);
-
-	int local = 0;
-	int exp = 1000;
-
-	for (int i = 2; i < 6; i++) {
-		local += exp*(verificar[i] - '0');
-		exp /= 10;
-	}
-
-	if (mem[local%9000] == NULL)
+	if (table[hkey] == NULL)
 		return 0;
 
-	Produto *it = &mem[local%9000];
+	Produto it = table[hkey];
 
-	while ((*it) != NULL) {
-		copialimitada(cmp,(*it)->Codigo_Produto, 2);
-		if (strcmp(cmp,key))
+	while (it != NULL) {
+        pkey2[0] = it->Codigo_Produto[0];
+        pkey2[1] = it->Codigo_Produto[1];
+		if (strcmp(pkey1, pkey2) == 0)
 			return 1;
-		it = &(*it)->prox;
+		it = it->prox;
 	}
 
 	return 0;

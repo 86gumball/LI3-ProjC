@@ -1,18 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/stringUtils.h"
 #include "../include/TestProdutos.h"
 
 #define pathToProdutos "../Dados Iniciais/Produtos.txt"
+
+// Requires: code_produto é do tipo: AAxxxx
+// Requires: 1000 <= xxxx <= 9999
+int hashCodeProduto(char code_produto[]){
+    int key = stoi(code_produto + 2);
+    key = key % 9000;
+    return key;
+}
 
 Produto createProduto (Produto next, char key[]) {
 	Produto new = (Produto) malloc (sizeof (struct produto));
 	new->prox = next;
 	for (int i = 0; i < 6; i++)
 		new->Codigo_Produto[i] = key[i];
-
 	return new;
 }
 
+// TODO: refactor this using stoi
 // Requires: Não haja produtos repetidos a ser inseridos
 void iterateProduto (int posTable, Produto mem[], char key[]) {
     // posTable [1000..9999]
