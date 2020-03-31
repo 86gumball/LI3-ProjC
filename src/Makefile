@@ -1,14 +1,14 @@
 IDIR =../include
 CC=gcc
-CFLAGS=-I$(IDIR)
+CFLAGS=-Wall -g
 
 ODIR=obj
 
 
-_DEPS = AuxVendas.h TestClientes.h TestProdutos.h
+_DEPS = AuxVendas.h TestClientes.h TestProdutos.h stringUtils.h TestVendas.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o AuxVendas.o TestClientes.o TestProdutos.o
+_OBJ = AuxVendas.o TestClientes.o TestProdutos.o stringUtils.o TestVendas.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

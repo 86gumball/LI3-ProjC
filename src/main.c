@@ -1,79 +1,68 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include "../include/TestProdutos.h"
+#include "../include/TestClientes.h"
+#include "../include/AuxVendas.h"
+#include "../include/TestVendas.h"
 
-void putString(char *output, char *first, char *second)
-{
-	int i,j;
-	for (i = 0; first[i] != 0; i++)
-		output[i] = first[i];
-
-	for (j = 0; second[j] != 0; j++, i++)
-		output[i] = second[j]; 
-
-	output[i] = 0;
-}
+#define pathToVendas "../Dados Iniciais/Vendas_1M.txt"
 
 int main(void){
+    FILE *f = fopen(pathToVendas, "r");
 
-	printf("Escolha um tipo de ficheiro: ");
-	char file[255];
-	char name[255];
-	scanf ("%s",name);
+    Produto *memP = testProds();
+    Cliente *memC = testClientes();
+    printf("senpai notice me\n");
 
-	putString(file,"Dados Iniciais/", name);
-	putString(file,file,".txt");
-   
-	FILE *filePointer = fopen(file,"r");
+    Cliente *it;
 
-	int lines = 0;
-	char holdChar;
-	int sizeOfWords;
+    for (int i = 0; i < 4001; i++) {
+        printf("%d:",i);
+        for(it = &memC[i]; *it != NULL; it = &(*it)->prox)
+            printf("%s->",(*it)->Codigo_Cliente);
+        putchar(10);
+    }
 
-	for (sizeOfWords = 0, holdChar = fgetc(filePointer); holdChar != '\r' && holdChar != '\n'; holdChar = fgetc(filePointer), sizeOfWords++);
-	
-	lines ++;
+    Venda **memV = malloc(4001000 * sizeof(Venda));
 
-	for (holdChar = fgetc(filePointer); holdChar != EOF; holdChar = fgetc(filePointer))
-		if (holdChar == '\r' || holdChar == '\n')
-			lines++;
+    Venda p;
 
-	printf("Words Size:%d\nNumber Of Lines:%d\n",sizeOfWords,lines);
+    char *meses[] = { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"};
 
-	fseek(filePointer,0 , SEEK_SET);
+    int lines = 0;
+    float preco;
+    int unidades;
+    int mes;
 
-	char clientes[lines*sizeOfWords];
+    while (fscanf(f,"%s %f %d %c %s %d %c",p.produto, &preco, &unidades, &p.compra, p.cliente, &mes, &p.filial) != EOF) {
+        p.codigo_Extra = codigo_Tudo (preco, unidades, mes);
+        if (produto_Existe(memP,p.produto) && cliente_Existe(memC,p.cliente)) {
+            //placeVenda(p,memV);
+            lines++;
+        }
+    }
 
-	int caracter = 0;
+    preco = devolve_Preco(p.codigo_Extra);
+    unidades = devolve_unidades(p.codigo_Extra);
+    mes = devolve_mes(p.codigo_Extra);
 
-	for (holdChar = fgetc(filePointer); holdChar != EOF; holdChar = fgetc(filePointer))
-	{
-		if (holdChar != '\n' && holdChar != '\r')
-		{
-			clientes[caracter] = holdChar;
-			caracter++;
-		}
-	}
 
-	int escolha;
+    printf("%d das vendas são verdadeiras.\n", lines);
+    printf("Produto:%s\n", p.produto);
 
-	printf("Escolha os dados do %s (<=%d): ", name ,lines);
+    printf("Preço:%f\n", preco);
+    printf("Unidades:%d\n", unidades);
 
-	scanf("%d", &escolha);
+    if (p.compra == 'P')
+        printf("Por Promoção\n");
+    else printf("Compra Normal\n");
+    printf ("Cliente:%s\n",p.cliente);
 
-	while (escolha > lines || escolha <= 0)
-	{
-		printf("Erro, escolha um %s entre 1 e %d: ", name , lines);
-		scanf("%d",&escolha);
-	}
+    printf ("Mes:%s\n", meses[mes - 1]);
 
-	printf("%s nº %d: ", name , escolha);
+    printf ("Filial:%c\n", p.filial);
 
-	for (int i = 0; i < sizeOfWords; i++)
-		putchar(clientes[(escolha-1)*sizeOfWords+i]);
-	putchar('\n');
-
-	fclose(filePointer);
-
-	//Isto ainda é um teste, separar em funções para minimizar o codigo, documentar no final, e intercetar o que os valores fazem
+    fclose(f);
 
     return 0;
 }

@@ -2,58 +2,52 @@
 #include <stdlib.h>
 #include "../include/TestProdutos.h"
 
-Produto createProduto (Produto *it, char key[]) {
-	Produto new = (Produto) malloc (sizeof (struct Produto));
-	new->prox = *it;
+#define pathToProdutos "../Dados Iniciais/Produtos.txt"
+
+Produto createProduto (Produto next, char key[]) {
+	Produto new = (Produto) malloc (sizeof (struct produto));
+	new->prox = next;
 	for (int i = 0; i < 6; i++)
 		new->Codigo_Produto[i] = key[i];
 
 	return new;
 }
 
-void iterateP (int posTable, Produto mem[], char key[]) {
-	Produto *it = &mem[posTable%9000];
+// Requires: Não haja produtos repetidos a ser inseridos
+void iterateProduto (int posTable, Produto mem[], char key[]) {
+    // posTable [1000..9999]
+    // 1000 -> 1000
+    // 8999 -> 8999
+    // 9000 -> 0
+    // 9001 -> 1
+    // 9999 -> 999
 
-	while (*it != NULL && ((*it)->Codigo_Produto[0] != key[0] || (*it)->Codigo_Produto[1] != key[1]))
-		it = &(*it)->prox;
-
-	if (*it == NULL)
-		*it = createProduto (it, key);
-
+	// Produto *it = &(mem[posTable%9000]);
+	Produto *it = mem + (posTable % 9000);
+	*it = createProduto (*it, key);
 }
 
-void allocateP (char key[], Produto mem[]) {
-	//Posição na tabela
-	int posTable = 0;
-	//Expoente numérico
-	int exp = 1000;
-	//Leitura de String para numérico	
-	for (int i = 2; i != '\r' && i != '\n'; i++) {
-		//Adição de dos numeros usando o expoente (ex:'3'*1000+'2'*100+'1'*10+'0'*1)
-		posTable += (key[i]+'0') * exp;
-		exp /= 10; 
-	}
-	
+void allocateProduto (char key[], Produto mem[]) {
+	int posTable = stoi(key + 2);
 	//Introduçao
-	iterateP (posTable, mem, key);
+	iterateProduto (posTable, mem, key);
 }
 
 Produto* testProds (void) {
 	//Carregar o apontador do ficheiro
-	FILE *f = fopen ("Dados Iniciais/Produtos.txt","r");
+	FILE *f = fopen (pathToProdutos,"r");
 	
 	//Alocar a memória á tabela
 	Produto *mem = malloc(9000 * sizeof(Produto));
 
-	//buffer para guardar cada linha
+	//buffer para guardar cada linha lida do ficheiro
 	char buf[10];
 
-	//Leitura até ao final do ficheiro
-	while (fgets(buf,10,f))
-		//Identificação da posição
-		allocateP(buf,mem);
+	//Leitura até ao final do ficheiro e alocação de produtos
+	while (fgets(buf, 10, f))
+		allocateProduto(buf, mem);
 	
-	//Fechar o apontador
+	//Fechar o ficheiro
 	fclose(f);
 
 	//Retornar a tabela
