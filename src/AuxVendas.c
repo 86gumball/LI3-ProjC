@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "AuxVendas.h"
+#include "../include/AuxVendas.h"
 
 void copialimitada(char a[], char b[] , int n) {
 	int i;

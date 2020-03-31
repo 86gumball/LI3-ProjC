@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "AuxVendas.h"
-#include "TestProdutos.h"
-#include "TestClientes.h"	
+#include "../include/AuxVendas.h"
+#include "../include/TestProdutos.h"
+#include "../include/TestClientes.h"
 
 int cliente_Existe (Cliente *mem, char* verificar) {
 	char key = verificar[0];

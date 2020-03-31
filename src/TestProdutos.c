@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "TestProdutos.h"
+#include "../include/TestProdutos.h"
 
 Produto createProduto (Produto *it, char key[]) {
 	Produto new = (Produto) malloc (sizeof (struct Produto));
