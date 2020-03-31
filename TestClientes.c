@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "TestClientes.h"
 
-//Criação da estrutura de um cliente
+
 Cliente createCliente (Cliente *it, char key[]) {
 	//Alocação de memoria
 	Cliente new = (Cliente) malloc (sizeof (struct cliente)); 
@@ -18,9 +18,6 @@ Cliente createCliente (Cliente *it, char key[]) {
 	return new; 
 }
 
-//Procura da posição para alocar o novo codigo, 
-//sendo a posição chamada pela numeração do Codigo 
-//(ex:A3590 -> posição 3590%4001 == posição 3590)
 void iterate (int posTable, Cliente mem[], char key[], char pos) {
 	//Uso de um iterador na posição suposta
 	Cliente *it = &mem[posTable%4001];
@@ -38,7 +35,6 @@ void iterate (int posTable, Cliente mem[], char key[], char pos) {
 
 }
 
-//Processo de desmembramento do codigo para iterar no array
 void allocate (char key[], Cliente mem[]) {
 	//Caracter que vai ser usado para determinar se é repetido ou não
 	char pos = key[0];
@@ -58,7 +54,6 @@ void allocate (char key[], Cliente mem[]) {
 	iterate (posTable, mem, key, pos);  
 }
 
-//Criação da tabela com os codigos todos do ficheiro
 Cliente* testClientes (void) {
 	//Abertura do ficheiro
 	FILE *f = fopen ("Dados Iniciais/Clientes.txt","r");
