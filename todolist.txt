@@ -1,0 +1,7 @@
+Implementar produto bst
+Implementar modulo faturaçao
+Implementar modulo filial
+Mudar o nome dos ficheiros (teste clientes->clientes)
+Implementar modulo sgv
+Implementar modulo controlo
+Corrigir erros do codigo

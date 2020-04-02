@@ -1,22 +1,23 @@
-void copialimitada(char a[], char b[] , int n);
+unsigned int createPUM (float preco, int unidades, int mes);
 
-unsigned int codigo_Tudo (float preco, int unidades, int mes);
+float devolve_Preco (unsigned int codigoPUM);
 
-float devolve_Preco (unsigned int codigo_Extra);
+int devolve_unidades (unsigned int codigoPUM);
 
-int devolve_unidades (unsigned int codigo_Extra);
+int devolve_mes (unsigned int codigoPUM);
 
-int devolve_mes (unsigned int codigo_Extra);
-
+// const char produto ??
 typedef struct venda {
-	char produto[7];
+	char code_produto[7];
 	char compra;
-	char cliente[6];
-	unsigned int codigo_Extra;
+	char code_cliente[6];
+	unsigned int codigoPUM;
 	char filial;
 	struct venda *prox;
-} Venda;
+} *Venda;
 
-void placeVenda (Venda p, Venda *memV[]);
+void placeVenda (Venda p, Venda *memV);
 
-void createVenda(Venda p, Venda *mem);
+Venda createVenda(Venda next, char code_produto[], char compra, char code_cliente[], unsigned int codigoPUM, char filial);
+
+Venda cloneVenda(Venda outra);

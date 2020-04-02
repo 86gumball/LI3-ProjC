@@ -1,12 +1,14 @@
-typedef struct Produto {
+typedef struct produto {
 	char Codigo_Produto[6];
-	struct Produto *prox;
+	struct produto *prox;
 } *Produto;
 
-Produto createProduto (Produto *it, char key[]);
+int hashCodeProduto(char code_produto[]);
 
-void iterateP (int posTable, Produto mem[], char key[]);
+Produto createProduto (Produto it, char key[]);
 
-void allocateP (char key[], Produto mem[]);
+void iterateProduto (int posTable, Produto mem[], char key[]);
+
+void allocateProduto (char key[], Produto mem[]);
 
 Produto* testProds (void);
