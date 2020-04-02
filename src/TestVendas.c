@@ -2,57 +2,60 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/AuxVendas.h"
-#include "../include/TestProdutos.h"
-#include "../include/TestClientes.h"
-
-#define HashTableProduto Produto*
-#define HashTableCliente Cliente*
+#include "../include/produtoUtil.h"
+#include "../include/clientesUtil.h"
+#include "../include/stringUtils.h"
 
 // Confirmado que funciona
-int cliente_Existe (HashTableCliente table, char code_cliente[]) {
+int cliente_Existe (CBTS *tree, char code_cliente[]) {
     // produto key
-	char pkey = code_cliente[0];
+	int pkey = code_cliente[0] - 'A';
     // hkey = key na hashtable
-    int hkey = hashCodeCliente(code_cliente);
+    short hkey = stoi(code_cliente);
 
-	if (table[hkey] == NULL)
+	if (tree[pkey] == NULL)
 		return 0;
 
-	Cliente it = table[hkey];
+	CBTS *it = &tree[pkey];
 
-	while (it != NULL) {
-		if (pkey == it->Codigo_Cliente[0])
+	while (*it != NULL) {
+		if (hkey == (*it)->numero_identificacao)
 			return 1;
-		it = it->prox;
+		
+		else if (hkey > (*it)->numero_identificacao)
+			it = &(*it)->maior;
+
+		else 
+			it = &(*it)->menor;
 	}
 
 	return 0;
-
 }
 
 // Confirmado que funciona
-int produto_Existe (HashTableProduto table, char code_produto[]) {
-    int hkey = hashCodeProduto(code_produto);
-    char pkey1[3];
-    char pkey2[3];
-    pkey1[0] = code_produto[0];
-    pkey1[1] = code_produto[1];
-    pkey1[2] = '\0';
-    pkey2[2] = '\0';
+int produto_Existe (PBST **table, char code_produto[]) {
+  
 
-	if (table[hkey] == NULL)
+	int pkey1 = code_produto[0] - 'A';
+	int pkey2 = code_produto[1] - 'A';
+
+	int hkey = stoi(code_produto);
+
+	if (table[pkey1][pkey2] == NULL)
 		return 0;
 
-	Produto it = table[hkey];
+	PBST *it = &table[pkey1][pkey2];
 
-	while (it != NULL) {
-        pkey2[0] = it->Codigo_Produto[0];
-        pkey2[1] = it->Codigo_Produto[1];
-		if (strcmp(pkey1, pkey2) == 0)
+	while (*it != NULL) {
+		if (hkey == (*it)->numero_identificacao)
 			return 1;
-		it = it->prox;
-	}
+		
+		else if (hkey > (*it)->numero_identificacao)
+			it = &(*it)->maior;
 
+		else 
+			it = &(*it)->menor;
+	}
 	return 0;
 
 }

@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/stringUtils.h"
-#include "../include/clientesUtil.h"
+#include "../include/produtoUtil.h"
 
-CBTS creatreNodeCliente (char key, short numero) {
-    CBTS new = (CBTS) malloc(sizeof(struct clienteBTS));
+PBST creatreNodeProduto (char key[], short numero) {
+    PBST new = (PBST) malloc(sizeof(struct produtoBST));
     
-    new->code_cliente = key;
+    new->code_produto_upper = key[0];
+    new->code_produto_sub = key[1];
     //new->heigth = 1; 
     new->numero_identificacao = numero;
     new->maior = NULL;
@@ -68,20 +69,21 @@ CBTS rotacaoMaior (struct clienteBTS *tree) {
 }
 */
 
-CBTS insert (char buffer, struct clienteBTS *tree, short key_num) {
+PBST insertP (char buffer[], struct produtoBST *tree, short key_num) {
     
-    if (tree == NULL)
-        return creatreNodeCliente (buffer, key_num);
-    
+    if (tree == NULL){
+        tree = creatreNodeProduto (buffer, key_num);
+        return tree;
+    }
     else {
         if (tree->numero_identificacao == key_num)
             return tree;
 
         else if (tree->numero_identificacao > key_num)
-            tree->menor = insert (buffer, (tree->menor), key_num);
+            tree->menor = insertP (buffer, (tree->menor), key_num);
 
         else
-            tree->maior = insert (buffer, (tree->maior), key_num);            
+            tree->maior = insertP (buffer, (tree->maior), key_num);            
     }
 
 //TODO: Conseguir implementar a rotações de AVL para melhorar eficiencia
@@ -116,25 +118,32 @@ CBTS insert (char buffer, struct clienteBTS *tree, short key_num) {
 
 };
 
-void chooseTree (char key, CBTS mem[], short posTable) {
-    CBTS *it = mem + (key-'A');
-
-    *it = insert (key,*it, posTable);
+void chooseTreeP (char key[], PBST *mem[], short posTable) {
+    int key1 = key[0] - 'A';
+    int key2 = key[1] - 'A';
+    PBST *it = &mem[key1][key2];
+    *it = insertP (key,*it, posTable);
 }
 
-CBTS *catalogoClientes (CBTS *mem) {
-    FILE *f = fopen("/home/tripz/Desktop/LI3/LI3/Dados Iniciais/Clientes.txt", "r");
+PBST **catalogoProdutos (PBST **mem) {
+    FILE *f = fopen("/home/tripz/Desktop/LI3/LI3/Dados Iniciais/Produtos.txt", "r");
     
-    for (int i = 0; i < 26; i++)
-        mem[i] = NULL;
+    for (int j = 0; j < 26; j++){
+        for (int i = 0; i < 26; i++)
+            mem[i][j] = NULL;
+    }
 
     char buffer[10];
     short valor_doBuffer;
+    char key[2];
 
     while (fgets(buffer,10,f)) {
         valor_doBuffer = stoi(buffer);
-        chooseTree(buffer[0], mem, valor_doBuffer);
+        key[0] = buffer[0];
+        key[1] = buffer[1];
+        chooseTreeP(key, mem, valor_doBuffer);
     };
+
     fclose(f);
 
     return mem;

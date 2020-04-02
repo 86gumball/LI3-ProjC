@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/TestProdutos.h"
-#include "../include/TestClientes.h"
+#include "../include/produtoUtil.h"
+#include "../include/clientesUtil.h"
 #include "../include/AuxVendas.h"
 #include "../include/TestVendas.h"
 
 #define pathToVendas "../Dados Iniciais/Vendas_1M.txt"
-#define HashTableProduto Produto*
-#define HashTableCliente Cliente*
 #define HashTableVenda Venda*
 
 // TODO: Rename TestProdutos -> produtosUtils
@@ -16,9 +14,13 @@ int main(void){
     FILE *f = fopen(pathToVendas, "r");
 
     // Cria uma hashtable e enche-a com todos os produtos
-    HashTableProduto tablePro = testProds();
+    PBST **tablePro = malloc(26 * sizeof(PBST*));
+    for (int i = 0; i < 26; i++)
+        tablePro[i] = malloc(26 * sizeof(PBST));
+    **tablePro = **catalogoProdutos(tablePro);
     // Cria uma hashtable e enche-a com todos os clientes
-    HashTableCliente tableCli = testClientes();
+    CBTS *catalogoC = malloc(26 * sizeof(CBTS)); 
+    *catalogoC = *catalogoClientes(catalogoC);
 
     // Start debugging only 
     /*
@@ -56,7 +58,7 @@ int main(void){
                                             &p->filial) != EOF) {
         // Converte preco, unidades e mes num codigoPUM
         p->codigoPUM = createPUM(preco, unidades, mes);
-        if (produto_Existe(tablePro, p->code_produto) && cliente_Existe(tableCli, p->code_cliente)) {
+        if (produto_Existe(tablePro, p->code_produto) && cliente_Existe(catalogoC, p->code_cliente)) {
             //placeVenda(p, tableVen);
             lines++;
         }

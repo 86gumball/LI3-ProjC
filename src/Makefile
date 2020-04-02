@@ -5,10 +5,10 @@ CFLAGS=-Wall -g
 ODIR=obj
 
 
-_DEPS = AuxVendas.h TestClientes.h TestProdutos.h stringUtils.h TestVendas.h
+_DEPS = AuxVendas.h clientesUtil.h produtoUtil.h stringUtils.h TestVendas.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = AuxVendas.o TestClientes.o TestProdutos.o stringUtils.o TestVendas.o main.o
+_OBJ = AuxVendas.o stringUtils.o clientesUtil.o produtoUtil.o TestVendas.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

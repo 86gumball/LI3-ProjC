@@ -3,8 +3,8 @@
 //Nota: short utiliza 2 bytes e range [-32,478..32,477], acaba por usar menos memoria
 // Requires: a string that ends with \0
 short stoi (char num[]) {
-    short exp = 1, ret = 0;
-    short i = 0;
+    int ret = 0;
+    int i = 0;
 
     while (!('0' <= num[i] && num[i] <= '9'))
         i++;

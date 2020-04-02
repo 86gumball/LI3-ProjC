@@ -1,2 +1,2 @@
-int cliente_Existe (Cliente *mem, char* verificar);
-int produto_Existe (Produto *mem, char* verificar);
+int cliente_Existe (CBTS *mem, char* verificar);
+int produto_Existe (PBST **mem, char* verificar);
