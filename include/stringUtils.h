@@ -1,0 +1,1 @@
+short stoi(char num[]);
